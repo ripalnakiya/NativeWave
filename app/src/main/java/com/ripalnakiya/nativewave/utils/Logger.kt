@@ -1,4 +1,4 @@
-package com.ripalnakiya.nativewave
+package com.ripalnakiya.nativewave.utils
 
 import android.util.Log
 

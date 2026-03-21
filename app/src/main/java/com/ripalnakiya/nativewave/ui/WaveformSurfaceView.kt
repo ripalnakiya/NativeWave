@@ -1,4 +1,4 @@
-package com.ripalnakiya.nativewave
+package com.ripalnakiya.nativewave.ui
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -14,6 +14,8 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.createBitmap
+import com.ripalnakiya.nativewave.AudioRecorder
+import com.ripalnakiya.nativewave.utils.Logger
 
 private const val TAG = "WaveformSurfaceView"
 

@@ -3,6 +3,7 @@ package com.ripalnakiya.nativewave
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import com.ripalnakiya.nativewave.ui.WaveformSurfaceView
 
 private const val TAG = "AudioRecorder"
 

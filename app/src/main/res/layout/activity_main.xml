@@ -7,7 +7,31 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.ripalnakiya.nativewave.WaveformSurfaceView
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:text="Native Wave"
+        android:textColor="@color/neon_pink"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/materialDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/materialDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/blue"
+        app:dividerThickness="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/waveSurface"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <com.ripalnakiya.nativewave.ui.WaveformSurfaceView
         android:id="@+id/waveSurface"
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -18,33 +42,50 @@
         app:layout_constraintVertical_bias="0.241"
         tools:layout_editor_absoluteX="0dp" />
 
-    <Button
-        android:id="@+id/staticButton"
-        android:layout_width="wrap_content"
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginBottom="244dp"
-        android:text="Static"
-        android:textSize="16sp"
+        app:dividerColor="@color/blue"
+        app:dividerThickness="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/movingButton"
-        app:layout_constraintHorizontal_bias="0.009"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveSurface" />
+        app:layout_constraintTop_toBottomOf="@+id/waveSurface"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
 
-    <Button
-        android:id="@+id/movingButton"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginBottom="244dp"
-        android:text="Moving"
-        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveSurface" />
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.636">
+
+        <Button
+            android:id="@+id/staticButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:backgroundTint="@color/neon_pink"
+            android:fontFamily="monospace"
+            android:text="Static"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/movingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:backgroundTint="@color/neon_pink"
+            android:fontFamily="monospace"
+            android:text="Moving"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/micButton"
