@@ -4,10 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.Shader
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -110,14 +112,19 @@ class WaveformSurfaceView(context: Context, attrs: AttributeSet?) :
         }
     }
 
-    private val paint = Paint().apply {
-        color = Color.rgb(3, 169, 244)
-        isAntiAlias = true
+    private val barPath = Path()
+    private val rect = RectF()
+
+    private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val highlightPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        alpha = 90
     }
 
-    private val clearPaint = Paint().apply {
-        color = Color.WHITE
-        style = Paint.Style.FILL
+    private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 2f
+        color = Color.parseColor("#66FFFFFF")
     }
 
     /**
@@ -130,31 +137,79 @@ class WaveformSurfaceView(context: Context, attrs: AttributeSet?) :
         val step = data.size / bars
         val barWidth = width.toFloat() / bars
         val maxHeight = height.toFloat()
+
         for (i in 0 until bars) {
             var sum = 0f
             for (j in 0 until step) {
                 sum += data[i * step + j]
             }
+
             val avg = sum / step
             val normalized = ((avg - minDb) / (maxDb - minDb)).coerceIn(0f, 1f)
             val barHeight = normalized * maxHeight
-            val x = i * barWidth
 
-//            canvas.drawRect(x, height - barHeight, x + barWidth * 0.8f, height.toFloat(), paint)
+            val left = i * barWidth
+            val right = left + barWidth * 0.8f
+            val top = height - barHeight
+            val bottom = height.toFloat()
 
-            // Have a curved top on rectangular bars
-            val rect = RectF(x, height - barHeight, x + barWidth * 0.8f, height.toFloat())
-            val path = Path()
-            val radius = barWidth * 0.4f
-            path.addRoundRect(rect, floatArrayOf(
+            rect.set(left, top, right, bottom)
+
+            val radius = barWidth * 0.35f
+
+            // ---- Build rounded top path ----
+            barPath.reset()
+            barPath.addRoundRect(rect, floatArrayOf(
                     radius, radius,   // top-left
                     radius, radius,   // top-right
                     0f, 0f,           // bottom-right
                     0f, 0f            // bottom-left
                 ), Path.Direction.CW)
 
-            canvas.drawPath(path, paint)
+            // ---- Gradient (glass body) ----
+            val gradient = LinearGradient(left, top, left, bottom, intArrayOf(
+                    Color.parseColor("#66E1F5FE"), // light top
+                    Color.parseColor("#FF03A9F4")  // solid bottom
+                ), null, Shader.TileMode.CLAMP
+            )
+
+            barPaint.shader = gradient
+
+            // ---- Draw main bar ----
+            canvas.drawPath(barPath, barPaint)
+
+            barPaint.shader = null
+
+            // ---- Highlight (glass shine) ----
+            val highlightHeight = barHeight * 0.3f
+
+            if (highlightHeight > 0) {
+                rect.set(left, top, right, top + highlightHeight)
+
+                barPath.reset()
+                barPath.addRoundRect(rect, floatArrayOf(
+                        radius, radius,
+                        radius, radius,
+                        0f, 0f,
+                        0f, 0f
+                    ), Path.Direction.CW)
+
+                canvas.drawPath(barPath, highlightPaint)
+            }
+
+            // ---- Subtle top edge stroke ----
+            canvas.drawPath(barPath, strokePaint)
         }
+    }
+
+    private val paint = Paint().apply {
+        color = Color.rgb(3, 169, 244)
+        isAntiAlias = true
+    }
+
+    private val clearPaint = Paint().apply {
+        color = Color.WHITE
+        style = Paint.Style.FILL
     }
 
     private val shift = 6 // pixels per frame (speed of movement)
