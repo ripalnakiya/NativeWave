@@ -4,12 +4,16 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 
+private const val TAG = "AudioRecorder"
+
 class AudioRecorder(private val surfaceView: WaveformSurfaceView) {
     private var audioRecord: AudioRecord? = null
-    var isRecording = false
-    val fftSize = 2048 // or 2048
+    private val fftSize = 1024
 
     companion object {
+        @Volatile
+        var isRecording = false
+
         init {
             System.loadLibrary("native-lib")
         }
@@ -40,12 +44,10 @@ class AudioRecorder(private val surfaceView: WaveformSurfaceView) {
                 processAudio(buffer, read)
             }
         }.start()
-        surfaceView.startVisualization()
     }
 
     fun stopRecording() {
         isRecording = false
-        surfaceView.stopVisualization()
         audioRecord?.stop()
         audioRecord?.release()
         audioRecord = null

@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ripalnakiya.nativewave.databinding.ActivityMainBinding
 
+private const val TAG = "MainActivity"
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var recorder: AudioRecorder
@@ -30,6 +32,14 @@ class MainActivity : AppCompatActivity() {
 
         recorder = AudioRecorder(binding.waveSurface)
 
+        binding.staticButton.setOnClickListener {
+            binding.waveSurface.renderMode = RenderMode.STATIC
+        }
+
+        binding.movingButton.setOnClickListener {
+            binding.waveSurface.renderMode = RenderMode.MOVING
+        }
+
         binding.micButton.setOnClickListener {
             if (hasAudioPermission()) {
                 toggleRecording()
@@ -40,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toggleRecording() {
-        if (!recorder.isRecording) {
+        if (!AudioRecorder.isRecording) {
             recorder.startRecording()
             updateUI(true)
         } else {
